@@ -1,10 +1,17 @@
-// const distinguishContent = (title)=>{
-//   const checkImage = /(.png)$|(.jpg)$/;
-//   const checkVideo= /(.png)$|(.jpg)$/;
-//   const checkImg = /(.png)$|(.jpg)$/;
-//   if(title.includes('.png'))
-// }
-// image video note task
+const isValid = (value, targetContent) => {
+    const checkImage = /(.png)$|(.jpg)$/;
+    const checkVideo = /(.mp4)$|(.avi)$}|(.wmv$)/;
+    if (checkImage.test(value) && targetContent === "Image") {
+        return true;
+    }
+    else if (checkVideo.test(value) && targetContent === "Video") {
+        return true;
+    }
+    else if (targetContent === "Note" || targetContent === "Task")
+        return true;
+    else
+        return false;
+};
 const isImageOrVideo = (targetContent) => targetContent === "Image" || targetContent === "Video";
 const addMainContent = (title, text, targetContent) => `
 <div class="content">
@@ -15,10 +22,10 @@ const addMainContent = (title, text, targetContent) => `
     ${targetContent === "Note" ? `<div>${text}</div>` : ``}
     ${targetContent === "Task" ? `<ul><li>${text}</li></ul>` : ``}
   </div>
-  <button onclick={myFunction(this)} class="eraseContentBtn">x</button>
+  <button onclick={eraseContent(this)} class="eraseContentBtn">x</button>
 </div>
 `;
-window.myFunction = (e) => {
+window.eraseContent = (e) => {
     e.parentNode.remove();
 };
 const urlContent = ($modal, targetContent) => {
@@ -30,7 +37,7 @@ const urlContent = ($modal, targetContent) => {
   <div class="modalText">${isImageOrVideo(targetContent) ? "URL" : "Body"}</div>
   <input type="text" class="textInput"/>
   <div>
-  <button class="modalBtn" >Click me</button>
+  <button class="modalBtn">Click me</button>
   </div>
   </div>
   `;
@@ -51,9 +58,14 @@ const addModal = ($target, targetContent) => {
         const $titleInput = document.querySelector(".titleInput");
         const $textInput = document.querySelector(".textInput");
         const $main = document.querySelector("main");
-        $main.insertAdjacentHTML("afterbegin", addMainContent($titleInput.value, $textInput.value, targetContent));
-        document.querySelector("#modalContent").remove();
-        $modal.style.display = "none";
+        if (isValid($textInput.value, targetContent)) {
+            $main.insertAdjacentHTML("afterbegin", addMainContent($titleInput.value, $textInput.value, targetContent));
+            document.querySelector("#modalContent").remove();
+            $modal.style.display = "none";
+        }
+        else {
+            alert("제대로 된 값을 입력해주세요 ");
+        }
     };
     $modal.style.display = "block";
 };
