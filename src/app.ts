@@ -5,7 +5,6 @@ const $modalBody = document.querySelector(".modal_body");
 const $ul = document.querySelector("ul");
 $ul.addEventListener("click", (e) => {
   if ($ul.children.length !== 0) {
-    console.log("!");
     addModal($modalBody, e.target.textContent);
   }
 });
